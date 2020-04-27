@@ -143,12 +143,16 @@ void StereoKnobAudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuf
 
     for (int sampleNum = 0; sampleNum < buffer.getNumSamples(); ++sampleNum)
     {
-        auto midSignal = leftChannelBuffer[sampleNum] + rightChannelBuffer[sampleNum];
-        auto sideSignal = leftChannelBuffer[sampleNum] - rightChannelBuffer[sampleNum];
+        auto midSignal = leftChannelBuffer[sampleNum] + rightChannelBuffer[sampleNum]; // Mid = L + R (mono signal / all data)
+        auto sideSignal = leftChannelBuffer[sampleNum] - rightChannelBuffer[sampleNum]; // Side  = L - R (difference beetween L and R)
 
-        leftChannelBuffer[sampleNum] = midSignal;
-        rightChannelBuffer[sampleNum] = sideSignal;
+        // leftChannelBuffer[sampleNum] = midSignal;
+        // rightChannelBuffer[sampleNum] = sideSignal;
 
+        midSignal = midSignal/2;
+
+        leftChannelBuffer[sampleNum] = (midSignal + sideSignal) / 2; // recreation of L channel, L = (Mid + Side)/2
+        rightChannelBuffer[sampleNum] = (midSignal - sideSignal) / 2; // recreation of R channel,  R = (Mid - Side)/2
     }
 }
 
