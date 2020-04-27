@@ -149,11 +149,23 @@ void StereoKnobAudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuf
     // the samples and the outer loop is handling the channels.
     // Alternatively, you can process the samples with the channels
     // interleaved by keeping the same state.
-    for (int channel = 0; channel < totalNumInputChannels; ++channel)
+    /* for (int channel = 0; channel < totalNumInputChannels; ++channel)
     {
         auto* channelData = buffer.getWritePointer (channel);
 
         // ..do something to the data...
+    } */
+
+    auto* leftChannelBuffer = buffer.getWritePointer(0);
+    auto* rightChannelBuffer = buffer.getWritePointer(1);
+
+    for (int sampleNum = 0; sampleNum < buffer.getNumSamples(); ++sampleNum)
+    {
+        auto midSignal = leftChannelBuffer[sampleNum] + rightChannelBuffer[sampleNum];
+        auto sideSignal = leftChannelBuffer[sampleNum] - rightChannelBuffer[sampleNum];
+
+        leftChannelBuffer[sampleNum] = midSignal;
+        rightChannelBuffer[sampleNum] = sideSignal;
     }
 }
 
