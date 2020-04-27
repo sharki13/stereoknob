@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<JUCERPROJECT id="ZIJTYq" name="StereoKnob" projectType="audioplug" jucerVersion="5.4.7">
+<JUCERPROJECT id="ZIJTYq" name="StereoKnob" projectType="audioplug" jucerVersion="5.4.7"
+              companyName="SFX">
   <MAINGROUP id="NyyhDO" name="StereoKnob">
     <GROUP id="{D33D90BE-3033-62CA-3F0D-35B97F9895D4}" name="Source">
       <FILE id="UppTWW" name="PluginProcessor.cpp" compile="1" resource="0"
