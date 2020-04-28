@@ -23,7 +23,7 @@ StereoKnobAudioProcessorEditor::StereoKnobAudioProcessorEditor (StereoKnobAudioP
     addAndMakeVisible(stereoKnobSlider.get());
     stereoKnobSlider->setRange(-1, 1, 0.01);
     stereoKnobSlider->setValue(0);
-    stereoKnobSlider->setSliderStyle(Slider::RotaryHorizontalDrag);
+    stereoKnobSlider->setSliderStyle(Slider::RotaryHorizontalVerticalDrag);
     stereoKnobSlider->setTextBoxStyle(Slider::TextBoxBelow, true, 80, 20);
     stereoKnobSlider->setTextValueSuffix(" Width");
     stereoKnobSlider->setBounds(getLocalBounds());
