@@ -18,6 +18,18 @@ StereoKnobAudioProcessorEditor::StereoKnobAudioProcessorEditor (StereoKnobAudioP
     // Make sure that before the constructor has finished, you've set the
     // editor's size to whatever you need it to be.
     setSize (400, 300);
+
+    stereoKnobSlider.reset(new Slider("StereoKnobSlider"));
+    addAndMakeVisible(stereoKnobSlider.get());
+    stereoKnobSlider->setRange(0, 1, 0.01);
+    stereoKnobSlider->setValue(0);
+    stereoKnobSlider->setSliderStyle(Slider::RotaryHorizontalDrag);
+    stereoKnobSlider->setTextBoxStyle(Slider::TextBoxBelow, true, 80, 20);
+    stereoKnobSlider->setTextValueSuffix(" Width");
+    stereoKnobSlider->setBounds(getLocalBounds());
+    stereoKnobSlider->addListener(this);
+
+    addAndMakeVisible(stereoKnobSlider.get());
 }
 
 StereoKnobAudioProcessorEditor::~StereoKnobAudioProcessorEditor()
@@ -32,11 +44,19 @@ void StereoKnobAudioProcessorEditor::paint (Graphics& g)
 
     g.setColour (Colours::white);
     g.setFont (15.0f);
-    g.drawFittedText ("Hello World!", getLocalBounds(), Justification::centred, 1);
+    //g.drawFittedText ("Hello World!", getLocalBounds(), Justification::centred, 1);
 }
 
 void StereoKnobAudioProcessorEditor::resized()
 {
     // This is generally where you'll want to lay out the positions of any
     // subcomponents in your editor..
+
+    
+}
+
+void StereoKnobAudioProcessorEditor::sliderValueChanged(Slider* slider)
+{
+    if (slider->getName() == "StereoKnobSlider")
+        processor.stereoFactor = slider->getValue();
 }
