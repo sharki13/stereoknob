@@ -56,7 +56,7 @@ public:
     void setStateInformation (const void* data, int sizeInBytes) override;
 
     // processor parameters
-    double stereoFactor = 1;
+    double stereoFactor = 0;
 
 private:
     //==============================================================================
