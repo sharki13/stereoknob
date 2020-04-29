@@ -79,21 +79,21 @@ int StereoKnobAudioProcessor::getCurrentProgram()
     return 0;
 }
 
-void StereoKnobAudioProcessor::setCurrentProgram (int index)
+void StereoKnobAudioProcessor::setCurrentProgram (int /*index*/)
 {
 }
 
-const String StereoKnobAudioProcessor::getProgramName (int index)
+const String StereoKnobAudioProcessor::getProgramName (int /*index*/)
 {
     return {};
 }
 
-void StereoKnobAudioProcessor::changeProgramName (int index, const String& newName)
+void StereoKnobAudioProcessor::changeProgramName (int /*index*/, const String& /*newName*/)
 {
 }
 
 //==============================================================================
-void StereoKnobAudioProcessor::prepareToPlay (double sampleRate, int samplesPerBlock)
+void StereoKnobAudioProcessor::prepareToPlay (double /*sampleRate*/, int /*samplesPerBlock*/)
 {
     // Use this method as the place to do any pre-playback
     // initialisation that you need..
@@ -128,7 +128,7 @@ bool StereoKnobAudioProcessor::isBusesLayoutSupported (const BusesLayout& layout
 }
 #endif
 
-void StereoKnobAudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuffer& midiMessages)
+void StereoKnobAudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuffer& /*midiMessages*/)
 {
     ScopedNoDenormals noDenormals;
     auto totalNumInputChannels  = getTotalNumInputChannels();
@@ -141,8 +141,8 @@ void StereoKnobAudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuf
     auto* leftChannelBuffer = buffer.getWritePointer(0);
     auto* rightChannelBuffer = buffer.getWritePointer(1);
 
-    double midGain = 1;
-    double sideGain = 1;
+    float midGain = 1;
+    float sideGain = 1;
 
     if (stereoFactor > 0)
     {
@@ -175,14 +175,14 @@ AudioProcessorEditor* StereoKnobAudioProcessor::createEditor()
 }
 
 //==============================================================================
-void StereoKnobAudioProcessor::getStateInformation (MemoryBlock& destData)
+void StereoKnobAudioProcessor::getStateInformation (MemoryBlock& /*destData*/)
 {
     // You should use this method to store your parameters in the memory block.
     // You could do that either as raw data, or use the XML or ValueTree classes
     // as intermediaries to make it easy to save and load complex data.
 }
 
-void StereoKnobAudioProcessor::setStateInformation (const void* data, int sizeInBytes)
+void StereoKnobAudioProcessor::setStateInformation (const void* /*data*/, int /*sizeInBytes*/)
 {
     // You should use this method to restore your parameters from this memory block,
     // whose contents will have been created by the getStateInformation() call.

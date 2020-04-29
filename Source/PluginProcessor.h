@@ -47,16 +47,16 @@ public:
     //==============================================================================
     int getNumPrograms() override;
     int getCurrentProgram() override;
-    void setCurrentProgram (int index) override;
-    const String getProgramName (int index) override;
-    void changeProgramName (int index, const String& newName) override;
+    void setCurrentProgram (int) override;
+    const String getProgramName (int) override;
+    void changeProgramName (int, const String&) override;
 
     //==============================================================================
-    void getStateInformation (MemoryBlock& destData) override;
-    void setStateInformation (const void* data, int sizeInBytes) override;
+    void getStateInformation (MemoryBlock&) override;
+    void setStateInformation (const void*, int) override;
 
     // processor parameters
-    double stereoFactor = 0;
+    float stereoFactor = 0;
 
 private:
     //==============================================================================

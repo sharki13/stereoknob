@@ -58,5 +58,5 @@ void StereoKnobAudioProcessorEditor::resized()
 void StereoKnobAudioProcessorEditor::sliderValueChanged(Slider* slider)
 {
     if (slider->getName() == "StereoKnobSlider")
-        processor.stereoFactor = slider->getValue();
+        processor.stereoFactor = static_cast<float>(slider->getValue());
 }
