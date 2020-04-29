@@ -55,10 +55,10 @@ public:
     void getStateInformation (MemoryBlock&) override;
     void setStateInformation (const void*, int) override;
 
-    // processor parameters
-    float stereoFactor = 0;
-
 private:
     //==============================================================================
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (StereoKnobAudioProcessor)
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(StereoKnobAudioProcessor)
+
+    AudioParameterFloat* gain;
+    AudioParameterFloat* stereoFactor;
 };

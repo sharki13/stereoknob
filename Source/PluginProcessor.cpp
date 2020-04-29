@@ -13,17 +13,23 @@
 
 //==============================================================================
 StereoKnobAudioProcessor::StereoKnobAudioProcessor()
-#ifndef JucePlugin_PreferredChannelConfigurations
-     : AudioProcessor (BusesProperties()
-                     #if ! JucePlugin_IsMidiEffect
-                      #if ! JucePlugin_IsSynth
-                       .withInput  ("Input",  AudioChannelSet::stereo(), true)
-                      #endif
-                       .withOutput ("Output", AudioChannelSet::stereo(), true)
-                     #endif
-                       )
-#endif
+     : AudioProcessor (BusesProperties().withInput("Input", AudioChannelSet::stereo(), true).withOutput ("Output", AudioChannelSet::stereo(), true))
 {
+    addParameter(gain = new AudioParameterFloat(
+        "gain",
+        "Gain",
+        0.0f,
+        1.0f,
+        1.0f)
+    );
+
+    addParameter(stereoFactor = new AudioParameterFloat(
+        "stereoFactor",
+        "StereoFactor",
+        0.0f,
+        1.0f,
+        0.5f)
+    );
 }
 
 StereoKnobAudioProcessor::~StereoKnobAudioProcessor()
@@ -144,13 +150,13 @@ void StereoKnobAudioProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuf
     float midGain = 1;
     float sideGain = 1;
 
-    if (stereoFactor > 0)
+    if (*stereoFactor > 0)
     {
-        midGain -= stereoFactor;
+        midGain -= *stereoFactor;
     }
     else
     {
-        sideGain += stereoFactor;
+        sideGain += *stereoFactor;
     }
 
     for (int sampleNum = 0; sampleNum < buffer.getNumSamples(); ++sampleNum)
@@ -171,7 +177,7 @@ bool StereoKnobAudioProcessor::hasEditor() const
 
 AudioProcessorEditor* StereoKnobAudioProcessor::createEditor()
 {
-    return new StereoKnobAudioProcessorEditor (*this);
+    return new GenericAudioProcessorEditor (*this);
 }
 
 //==============================================================================
