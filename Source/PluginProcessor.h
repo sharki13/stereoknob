@@ -15,12 +15,12 @@
 //==============================================================================
 /**
 */
-class StereoKnobAudioProcessor  : public AudioProcessor
+class PluginProcessor  : public AudioProcessor
 {
 public:
     //==============================================================================
-    StereoKnobAudioProcessor();
-    ~StereoKnobAudioProcessor();
+    PluginProcessor();
+    ~PluginProcessor();
 
     //==============================================================================
     void prepareToPlay (double sampleRate, int samplesPerBlock) override;
@@ -57,7 +57,7 @@ public:
 
 private:
     //==============================================================================
-    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(StereoKnobAudioProcessor)
+    JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(PluginProcessor)
 
     AudioParameterFloat* gain;
     AudioParameterFloat* stereoFactor;
