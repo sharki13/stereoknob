@@ -164,7 +164,9 @@ void PluginProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuffer& /*mi
         auto midSignal = (leftChannelBuffer[sampleNum] + rightChannelBuffer[sampleNum]) * midGain; // Mid = L + R (mono signal / all data)
         auto sideSignal = (leftChannelBuffer[sampleNum] - rightChannelBuffer[sampleNum]) * sideGain; // Side  = L - R (difference beetween L and R)
 
-        leftChannelBuffer[sampleNum] = (midSignal + sideSignal) / 2; // recreation of L channel, L = (Mid + Side)/2
+        // TODO Add output gain
+
+        leftChannelBuffer[sampleNum] = ((midSignal + sideSignal) / 2); // recreation of L channel, L = (Mid + Side)/2
         rightChannelBuffer[sampleNum] = (midSignal - sideSignal) / 2; // recreation of R channel,  R = (Mid - Side)/2
     }
 }
