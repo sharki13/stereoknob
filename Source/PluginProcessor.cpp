@@ -15,7 +15,7 @@
 PluginProcessor::PluginProcessor()
      : AudioProcessor (BusesProperties().withInput("Input", AudioChannelSet::stereo(), true).withOutput ("Output", AudioChannelSet::stereo(), true))
 {
-    addParameter(gain = new AudioParameterFloat(
+    addParameter(gainParam = new AudioParameterFloat(
         "gain",
         "Gain",
         0.0f,
@@ -23,7 +23,7 @@ PluginProcessor::PluginProcessor()
         1.0f)
     );
 
-    addParameter(stereoFactor = new AudioParameterFloat(
+    addParameter(stereoFactorParam = new AudioParameterFloat(
         "stereoFactor",
         "StereoFactor",
         0.0f,
@@ -150,13 +150,15 @@ void PluginProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuffer& /*mi
     float midGain = 1;
     float sideGain = 1;
 
-    if (*stereoFactor > 0)
+    auto stereoFactor = (stereoFactorParam->get() - 0.5) * 2;
+
+    if (stereoFactor > 0)
     {
-        midGain -= *stereoFactor;
+        midGain -= stereoFactor;
     }
     else
     {
-        sideGain += *stereoFactor;
+        sideGain += stereoFactor;
     }
 
     for (int sampleNum = 0; sampleNum < buffer.getNumSamples(); ++sampleNum)
