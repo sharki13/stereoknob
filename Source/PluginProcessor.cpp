@@ -16,16 +16,18 @@ PluginProcessor::PluginProcessor()
      : AudioProcessor (BusesProperties().withInput("Input", AudioChannelSet::stereo(), true).withOutput ("Output", AudioChannelSet::stereo(), true)),
        parameters(*this, nullptr, "PARAMETERS",
            {
-               std::make_unique<AudioParameterFloat> ("gain",
-                                                      "Gain",
-                                                      0.0f,
-                                                      1.0f,
-                                                      1.0f),
                std::make_unique<AudioParameterFloat> ("stereoFactor",
                                                       "StereoFactor",
                                                       0.0f,
                                                       1.0f,
-                                                      0.5f)
+                                                      0.5f),
+              std::make_unique<AudioParameterFloat>("gain",
+                                                    "Gain",
+                                                    NormalisableRange<float>(-20.0f, 20.0f, 0.1f),
+                                                    0.0f, "dB",
+                                                    AudioProcessorParameter::genericParameter,
+                                                    [](float v, int) { return String(v, 1) + " dB"; },
+                                                    [](const String& t) { return t.dropLastCharacters(3).getFloatValue(); })
            })
 {
     gainParameter = parameters.getRawParameterValue("gain");
@@ -117,7 +119,7 @@ void PluginProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuffer& /*mi
     ScopedNoDenormals noDenormals;
     auto totalNumInputChannels  = getTotalNumInputChannels();
     auto totalNumOutputChannels = getTotalNumOutputChannels();
-    
+
     // Clear extra outputs which are not used
     for (auto i = totalNumInputChannels; i < totalNumOutputChannels; ++i)
         buffer.clear (i, 0, buffer.getNumSamples());
@@ -129,6 +131,8 @@ void PluginProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuffer& /*mi
     float sideGain = 1;
 
     auto stereoFactor = static_cast<float>((*stereoFactorParameter - 0.5) * 2);
+
+    auto gain = Decibels::decibelsToGain(static_cast<float>(*gainParameter));
 
     if (stereoFactor > 0)
     {
@@ -144,8 +148,8 @@ void PluginProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuffer& /*mi
         auto midSignal = (leftChannelBuffer[sampleNum] + rightChannelBuffer[sampleNum]) * midGain; // Mid = L + R (mono signal / all data)
         auto sideSignal = (leftChannelBuffer[sampleNum] - rightChannelBuffer[sampleNum]) * sideGain; // Side  = L - R (difference beetween L and R)
 
-        leftChannelBuffer[sampleNum] = ((midSignal + sideSignal) / 2) * *gainParameter; // recreation of L channel, L = (Mid + Side)/2
-        rightChannelBuffer[sampleNum] = ((midSignal - sideSignal) / 2) * *gainParameter; // recreation of R channel,  R = (Mid - Side)/2
+        leftChannelBuffer[sampleNum] = ((midSignal + sideSignal) / 2) * gain; // recreation of L channel, L = (Mid + Side)/2
+        rightChannelBuffer[sampleNum] = ((midSignal - sideSignal) / 2) * gain; // recreation of R channel,  R = (Mid - Side)/2
     }
 }
 

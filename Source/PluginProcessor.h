@@ -61,6 +61,8 @@ private:
 
     std::atomic<float>* gainParameter;
     std::atomic<float>* stereoFactorParameter;
+    std::atomic<float>* testGainLinParameter;
+    std::atomic<float>* testGainLogParameter;
 
     AudioProcessorValueTreeState parameters;
 };
