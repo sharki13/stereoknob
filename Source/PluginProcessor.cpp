@@ -99,28 +99,18 @@ void PluginProcessor::releaseResources()
     // spare memory, etc.
 }
 
-#ifndef JucePlugin_PreferredChannelConfigurations
 bool PluginProcessor::isBusesLayoutSupported (const BusesLayout& layouts) const
 {
-  #if JucePlugin_IsMidiEffect
-    ignoreUnused (layouts);
-    return true;
-  #else
-    // This is the place where you check if the layout is supported.
-    // In this template code we only support mono or stereo.
+    bool isSupportedLayout = true;
+
     if (layouts.getMainOutputChannelSet() != AudioChannelSet::stereo())
-        return false;
+        isSupportedLayout = false;
 
-    // This checks if the input layout matches the output layout
-   #if ! JucePlugin_IsSynth
     if (layouts.getMainOutputChannelSet() != layouts.getMainInputChannelSet())
-        return false;
-   #endif
+        isSupportedLayout = false;
 
-    return true;
-  #endif
+    return isSupportedLayout;
 }
-#endif
 
 void PluginProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuffer& /*midiMessages*/)
 {
