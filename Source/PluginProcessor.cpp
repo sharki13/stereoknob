@@ -14,7 +14,7 @@
 //==============================================================================
 PluginProcessor::PluginProcessor()
      : AudioProcessor (BusesProperties().withInput("Input", AudioChannelSet::stereo(), true).withOutput ("Output", AudioChannelSet::stereo(), true)),
-       parameters(*this, nullptr, Identifier(JucePlugin_Name),
+       parameters(*this, nullptr, "PARAMETERS",
            {
                std::make_unique<AudioParameterFloat> ("gain",
                                                       "Gain",
