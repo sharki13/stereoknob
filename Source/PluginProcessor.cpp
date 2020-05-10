@@ -18,9 +18,9 @@ PluginProcessor::PluginProcessor()
            {
                std::make_unique<AudioParameterFloat> ("stereoFactor",
                                                       "StereoFactor",
-                                                      0.0f,
-                                                      1.0f,
-                                                      0.5f),
+                                                      NormalisableRange<float>(-100.0f, 100.0f, 0.1f),
+                                                      0.0f, "%",
+                                                      AudioProcessorParameter::genericParameter),
               std::make_unique<AudioParameterFloat>("gain",
                                                     "Gain",
                                                     NormalisableRange<float>(-20.0f, 20.0f, 0.1f),
@@ -130,7 +130,7 @@ void PluginProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuffer& /*mi
     float midGain = 1;
     float sideGain = 1;
 
-    auto stereoFactor = static_cast<float>((*stereoFactorParameter - 0.5) * 2);
+    auto stereoFactor = *stereoFactorParameter/100;
 
     auto gain = Decibels::decibelsToGain(static_cast<float>(*gainParameter));
 
