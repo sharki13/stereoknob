@@ -13,23 +13,23 @@
 
 //==============================================================================
 PluginProcessor::PluginProcessor()
-     : AudioProcessor (BusesProperties().withInput("Input", AudioChannelSet::stereo(), true).withOutput ("Output", AudioChannelSet::stereo(), true))
+     : AudioProcessor (BusesProperties().withInput("Input", AudioChannelSet::stereo(), true).withOutput ("Output", AudioChannelSet::stereo(), true)),
+       parameters(*this, nullptr, Identifier(JucePlugin_Name),
+           {
+               std::make_unique<AudioParameterFloat> ("gain",
+                                                      "Gain",
+                                                      0.0f,
+                                                      1.0f,
+                                                      1.0f),
+               std::make_unique<AudioParameterFloat> ("stereoFactor",
+                                                      "StereoFactor",
+                                                      0.0f,
+                                                      1.0f,
+                                                      0.5f)
+           })
 {
-    addParameter(gainParam = new AudioParameterFloat(
-        "gain",
-        "Gain",
-        0.0f,
-        1.0f,
-        1.0f)
-    );
-
-    addParameter(stereoFactorParam = new AudioParameterFloat(
-        "stereoFactor",
-        "StereoFactor",
-        0.0f,
-        1.0f,
-        0.5f)
-    );
+    gainParameter = parameters.getRawParameterValue("gain");
+    stereoFactorParameter = parameters.getRawParameterValue("stereoFactor");
 }
 
 PluginProcessor::~PluginProcessor()
@@ -128,7 +128,7 @@ void PluginProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuffer& /*mi
     float midGain = 1;
     float sideGain = 1;
 
-    auto stereoFactor = static_cast<float>((stereoFactorParam->get() - 0.5) * 2);
+    auto stereoFactor = static_cast<float>((*stereoFactorParameter - 0.5) * 2);
 
     if (stereoFactor > 0)
     {
@@ -144,8 +144,8 @@ void PluginProcessor::processBlock (AudioBuffer<float>& buffer, MidiBuffer& /*mi
         auto midSignal = (leftChannelBuffer[sampleNum] + rightChannelBuffer[sampleNum]) * midGain; // Mid = L + R (mono signal / all data)
         auto sideSignal = (leftChannelBuffer[sampleNum] - rightChannelBuffer[sampleNum]) * sideGain; // Side  = L - R (difference beetween L and R)
 
-        leftChannelBuffer[sampleNum] = ((midSignal + sideSignal) / 2) * gainParam->get(); // recreation of L channel, L = (Mid + Side)/2
-        rightChannelBuffer[sampleNum] = ((midSignal - sideSignal) / 2) * gainParam->get(); // recreation of R channel,  R = (Mid - Side)/2
+        leftChannelBuffer[sampleNum] = ((midSignal + sideSignal) / 2) * *gainParameter; // recreation of L channel, L = (Mid + Side)/2
+        rightChannelBuffer[sampleNum] = ((midSignal - sideSignal) / 2) * *gainParameter; // recreation of R channel,  R = (Mid - Side)/2
     }
 }
 
