@@ -16,8 +16,7 @@
 //==============================================================================
 /**
 */
-class PluginEditor  : public AudioProcessorEditor,
-    private Slider::Listener
+class PluginEditor  : public AudioProcessorEditor
 {
 public:
     PluginEditor (PluginProcessor&);
@@ -28,12 +27,15 @@ public:
     void resized() override;
 
 private:
-    // This reference is provided as a quick way for your editor to
-    // access the processor object that created it.
-    void sliderValueChanged(Slider* slider) override;
-
     PluginProcessor& processor;
-    std::unique_ptr<Slider> stereoKnobSlider;
+
+    Slider mStereoFactorSlider;
+    Slider mGainSlider;
+
+    typedef AudioProcessorValueTreeState::SliderAttachment SliderAttachment ;
+
+    std::unique_ptr<SliderAttachment> mStereoFactorAttachment;
+    std::unique_ptr<SliderAttachment> mGainAttachment;
 
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR (PluginEditor)
 };

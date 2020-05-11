@@ -55,6 +55,11 @@ public:
     void getStateInformation (MemoryBlock&) override;
     void setStateInformation (const void*, int) override;
 
+    AudioProcessorValueTreeState& getValueTreeState();
+
+    static const String stereoFactorId;
+    static const String gainId;
+
 private:
     //==============================================================================
     JUCE_DECLARE_NON_COPYABLE_WITH_LEAK_DETECTOR(PluginProcessor)

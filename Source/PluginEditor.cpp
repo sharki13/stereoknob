@@ -15,21 +15,15 @@
 PluginEditor::PluginEditor (PluginProcessor& p)
     : AudioProcessorEditor (&p), processor (p)
 {
-    // Make sure that before the constructor has finished, you've set the
-    // editor's size to whatever you need it to be.
-    setSize (400, 300);
+    addAndMakeVisible(mStereoFactorSlider);
+    mStereoFactorAttachment.reset(new SliderAttachment(processor.getValueTreeState(), processor.stereoFactorId, mStereoFactorSlider));
+    mStereoFactorSlider.setSliderStyle(Slider::Rotary);
 
-    stereoKnobSlider.reset(new Slider("StereoKnobSlider"));
-    addAndMakeVisible(stereoKnobSlider.get());
-    stereoKnobSlider->setRange(-1, 1, 0.01);
-    stereoKnobSlider->setValue(0);
-    stereoKnobSlider->setSliderStyle(Slider::RotaryHorizontalVerticalDrag);
-    stereoKnobSlider->setTextBoxStyle(Slider::TextBoxBelow, true, 80, 20);
-    stereoKnobSlider->setTextValueSuffix(" Width");
-    stereoKnobSlider->setBounds(getLocalBounds());
-    stereoKnobSlider->addListener(this);
+    addAndMakeVisible(mGainSlider);
+    mGainAttachment.reset(new SliderAttachment(processor.getValueTreeState(), processor.gainId, mGainSlider));
+    mGainSlider.setSliderStyle(Slider::Rotary);
 
-    addAndMakeVisible(stereoKnobSlider.get());
+    setSize(800, 600);
 }
 
 PluginEditor::~PluginEditor()
@@ -49,12 +43,10 @@ void PluginEditor::paint (Graphics& g)
 
 void PluginEditor::resized()
 {
-    // This is generally where you'll want to lay out the positions of any
-    // subcomponents in your editor..
+    auto box = getLocalBounds().reduced(20);
+    box.removeFromBottom(40);
 
-    
-}
-
-void PluginEditor::sliderValueChanged(Slider* /*slider*/)
-{
+    const auto width = box.getWidth() / 3;
+    mGainSlider.setBounds(box.removeFromLeft(width).reduced(10));
+    mStereoFactorSlider.setBounds(box.removeFromLeft(width).reduced(10));
 }

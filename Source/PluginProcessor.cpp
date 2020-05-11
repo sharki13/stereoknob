@@ -11,17 +11,20 @@
 #include "PluginProcessor.h"
 #include "PluginEditor.h"
 
+const String PluginProcessor::stereoFactorId ("stereoFactor");
+const String PluginProcessor::gainId ("gain");
+
 //==============================================================================
 PluginProcessor::PluginProcessor()
      : AudioProcessor (BusesProperties().withInput("Input", AudioChannelSet::stereo(), true).withOutput ("Output", AudioChannelSet::stereo(), true)),
        parameters(*this, nullptr, "PARAMETERS",
            {
-               std::make_unique<AudioParameterFloat> ("stereoFactor",
+               std::make_unique<AudioParameterFloat> (stereoFactorId,
                                                       "StereoFactor",
                                                       NormalisableRange<float>(-100.0f, 100.0f, 0.1f),
                                                       0.0f, "%",
                                                       AudioProcessorParameter::genericParameter),
-              std::make_unique<AudioParameterFloat>("gain",
+              std::make_unique<AudioParameterFloat>(gainId,
                                                     "Gain",
                                                     NormalisableRange<float>(-20.0f, 20.0f, 0.1f),
                                                     0.0f, "dB",
@@ -161,7 +164,7 @@ bool PluginProcessor::hasEditor() const
 
 AudioProcessorEditor* PluginProcessor::createEditor()
 {
-    return new GenericAudioProcessorEditor (*this);
+    return new PluginEditor(*this);
 }
 
 //==============================================================================
@@ -179,6 +182,11 @@ void PluginProcessor::setStateInformation (const void* data, int sizeInBytes)
     if (xmlState.get() != nullptr)
         if (xmlState->hasTagName(parameters.state.getType()))
             parameters.replaceState(ValueTree::fromXml(*xmlState));
+}
+
+AudioProcessorValueTreeState& PluginProcessor::getValueTreeState()
+{
+    return parameters;
 }
 
 //==============================================================================
